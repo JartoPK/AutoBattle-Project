@@ -63,8 +63,8 @@ namespace AutoBattle.Meta.Editor
                 if (result.success)
                 {
                     var u = result.unit;
-                    Debug.Log($"  + Tier '{tier.displayName}' ({tier.cost} mon.) → [{u.rarity}] {u.classId} {u.displayName} · " +
-                              $"HP {u.baseStats.hp:F0}, ATQ {u.baseStats.attack:F1}, pasiva '{u.passiveId}' · monedas restantes: {state.wallet.coins}");
+                    Debug.Log($"  + Tier '{tier.displayName}' ({tier.cost} mon.) → [{u.rarity}] {u.displayName} (sin clase) · " +
+                              $"HP {u.baseStats.hp:F0}, ATQ {u.baseStats.attack:F1} · monedas restantes: {state.wallet.coins}");
                 }
                 else
                 {

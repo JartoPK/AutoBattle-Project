@@ -16,10 +16,11 @@ namespace AutoBattle.Core.Units
     {
         public string id;            // GUID único, estable de por vida.
         public string displayName;
-        public UnitClass classId;
+        public bool hasClass;        // Las reclutas nacen SIN clase; el jugador se la asigna.
+        public UnitClass classId;    // Válido solo si hasClass = true.
         public Rarity rarity;        // Calidad con la que se generó (afecta a sus stats).
         public UnitStats baseStats;  // ADN base. Solo lo modifican cicatrices (Fase 6).
-        public string passiveId;     // id de la PassiveData con la que nació.
+        public string passiveId;     // id de la pasiva (se rola al asignar la clase).
         public int battlesSurvived;
 
         public bool IsVeteran => battlesSurvived > 0;

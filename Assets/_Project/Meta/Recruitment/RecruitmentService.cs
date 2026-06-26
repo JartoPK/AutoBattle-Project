@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using AutoBattle.Core.Units;
 using AutoBattle.Meta.Base;
 
@@ -18,9 +17,9 @@ namespace AutoBattle.Meta.Recruitment
     }
 
     /// <summary>
-    /// Recluta una unidad de un tier: comprueba tope de roster y monedas, tira la
-    /// rareza en la ruleta del tier, elige clase al azar y genera la unidad.
-    /// Toda la lógica opera sobre el <see cref="MetaGameState"/> recibido.
+    /// Recluta una tropa de un tier: comprueba tope de roster y monedas, y tira la
+    /// rareza en la ruleta del tier. La recluta sale SIN clase (solo stats); la
+    /// clase la asigna el jugador después (ver <see cref="ClassAssignmentService"/>).
     /// </summary>
     public static class RecruitmentService
     {
@@ -28,7 +27,7 @@ namespace AutoBattle.Meta.Recruitment
             RecruitmentConfig config, BaseConfig baseConfig, Random rng = null)
         {
             if (state == null || tier == null || config == null || baseConfig == null
-                || config.generationConfig == null || config.classDatabase == null)
+                || config.generationConfig == null)
                 return RecruitResult.Fail(RecruitFailReason.ConfigInvalida);
 
             rng ??= new Random();
@@ -37,11 +36,8 @@ namespace AutoBattle.Meta.Recruitment
             if (state.roster.Count >= cap) return RecruitResult.Fail(RecruitFailReason.RosterLleno);
             if (!state.wallet.CanAfford(tier.cost)) return RecruitResult.Fail(RecruitFailReason.SinMonedas);
 
-            var classData = PickRandomClass(config.classDatabase, rng);
-            if (classData == null) return RecruitResult.Fail(RecruitFailReason.ConfigInvalida);
-
             var rarity = DrawRarity(tier, rng);
-            var unit = UnitFactory.Create(classData, config.generationConfig, rarity,
+            var unit = UnitFactory.CreateClassless(config.generationConfig, rarity,
                 config.rarityConfig, rng, state.recruitQualityBonus);
 
             state.wallet.Spend(tier.cost);
@@ -67,18 +63,6 @@ namespace AutoBattle.Meta.Recruitment
                 if (roll <= acc) return rw.rarity;
             }
             return table[table.Length - 1].rarity;
-        }
-
-        private static ClassData PickRandomClass(ClassDatabase db, Random rng)
-        {
-            var classes = db.classes;
-            if (classes == null || classes.Length == 0) return null;
-
-            var valid = new List<ClassData>();
-            foreach (var c in classes)
-                if (c != null) valid.Add(c);
-
-            return valid.Count == 0 ? null : valid[rng.Next(valid.Count)];
         }
     }
 }

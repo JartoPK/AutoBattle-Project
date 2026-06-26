@@ -1,0 +1,19 @@
+{
+    "name": "AutoBattle.App",
+    "rootNamespace": "AutoBattle.App",
+    "references": [
+        "AutoBattle.Core",
+        "AutoBattle.Meta",
+        "UnityEngine.UI",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

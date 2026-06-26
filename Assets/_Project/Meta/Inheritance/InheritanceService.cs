@@ -52,6 +52,7 @@ namespace AutoBattle.Meta.Inheritance
                 id = Guid.NewGuid().ToString("N"),
                 displayName = NameGenerator.Next(rng),
                 classId = chosenClass,
+                hasClass = true,
                 rarity = veteran.rarity,
                 baseStats = stats,
                 passiveId = veteran.passiveId,
