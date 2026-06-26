@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e60a1857a48ab24d8dba47966b6c2a3, type: 3}
+  m_Name: Mago
+  m_EditorClassIdentifier: AutoBattle.Core::AutoBattle.Core.Units.ClassData
+  classId: 2
+  displayName: Mago
+  unitPrefab: {fileID: 0}
+  usesMana: 1
+  possiblePassives:
+  - {fileID: 11400000, guid: c39a2087b9212c24c926745af4791c34, type: 2}
+  availableOrders: []
+  spells: []
