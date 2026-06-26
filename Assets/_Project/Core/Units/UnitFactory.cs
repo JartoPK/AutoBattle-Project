@@ -13,8 +13,9 @@ namespace AutoBattle.Core.Units
         /// <summary>Crea una unidad de la rareza indicada.</summary>
         /// <param name="rarityConfig">Si es null, se tira de todo el baremo (sin sesgo de rareza).</param>
         /// <param name="rng">RNG opcional para reproducibilidad; si es null se usa uno nuevo.</param>
+        /// <param name="qualityBonus">Desplaza la ventana de percentil hacia arriba [0..1] (bonus del árbol de mejoras).</param>
         public static UnitInstance Create(ClassData classData, UnitGenerationConfig config,
-            Rarity rarity, RarityConfig rarityConfig, Random rng = null)
+            Rarity rarity, RarityConfig rarityConfig, Random rng = null, float qualityBonus = 0f)
         {
             if (classData == null) throw new ArgumentNullException(nameof(classData));
             if (config == null) throw new ArgumentNullException(nameof(config));
@@ -23,6 +24,9 @@ namespace AutoBattle.Core.Units
             var window = rarityConfig != null
                 ? rarityConfig.GetPercentileWindow(rarity)
                 : new StatRange(0f, 1f);
+
+            if (qualityBonus != 0f)
+                window = new StatRange(Clamp01(window.min + qualityBonus), Clamp01(window.max + qualityBonus));
 
             var stats = new UnitStats
             {
@@ -57,6 +61,8 @@ namespace AutoBattle.Core.Units
             float percentile = percentileWindow.Roll(rng);
             return baremo.min + percentile * (baremo.max - baremo.min);
         }
+
+        private static float Clamp01(float v) => v < 0f ? 0f : (v > 1f ? 1f : v);
 
         // Elige una pasiva del pool cuya rareza sea <= la de la unidad.
         private static PassiveData PickPassive(ClassData classData, Rarity maxRarity, Random rng)

@@ -33,7 +33,7 @@ namespace AutoBattle.Meta.Recruitment
 
             rng ??= new Random();
 
-            int cap = baseConfig.GetRosterCap(state.baseLevel);
+            int cap = state.GetRosterCap(baseConfig);
             if (state.roster.Count >= cap) return RecruitResult.Fail(RecruitFailReason.RosterLleno);
             if (!state.wallet.CanAfford(tier.cost)) return RecruitResult.Fail(RecruitFailReason.SinMonedas);
 
@@ -41,7 +41,8 @@ namespace AutoBattle.Meta.Recruitment
             if (classData == null) return RecruitResult.Fail(RecruitFailReason.ConfigInvalida);
 
             var rarity = DrawRarity(tier, rng);
-            var unit = UnitFactory.Create(classData, config.generationConfig, rarity, config.rarityConfig, rng);
+            var unit = UnitFactory.Create(classData, config.generationConfig, rarity,
+                config.rarityConfig, rng, state.recruitQualityBonus);
 
             state.wallet.Spend(tier.cost);
             state.roster.Add(unit);

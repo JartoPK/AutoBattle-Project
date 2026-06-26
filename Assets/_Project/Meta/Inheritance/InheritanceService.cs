@@ -31,7 +31,7 @@ namespace AutoBattle.Meta.Inheritance
             if (classData == null) return null;
 
             rng ??= new Random();
-            float pct = baseConfig.statInheritPercent;
+            float pct = state.GetInheritPercent(baseConfig);
             var v = veteran.baseStats;
 
             var stats = new UnitStats
