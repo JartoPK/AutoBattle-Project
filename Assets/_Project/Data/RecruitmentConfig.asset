@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82aaef25ebe48924ab94dabc8e50690f, type: 3}
+  m_Name: RecruitmentConfig
+  m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Recruitment.RecruitmentConfig
+  generationConfig: {fileID: 11400000, guid: 6e8d94d083587534cbd61b001715a679, type: 2}
+  classDatabase: {fileID: 11400000, guid: 2aeb077d12d07154d9c36b9647654287, type: 2}
+  rarityConfig: {fileID: 11400000, guid: ae9745f5fe374ce45a91b2cc26da0012, type: 2}
+  tiers:
+  - displayName: Gratis
+    cost: 0
+    rarityTable:
+    - rarity: 0
+      weight: 70
+    - rarity: 1
+      weight: 30
+  - displayName: "Est\xE1ndar"
+    cost: 100
+    rarityTable:
+    - rarity: 0
+      weight: 45
+    - rarity: 1
+      weight: 35
+    - rarity: 3
+      weight: 20
+  - displayName: "\xC9lite"
+    cost: 300
+    rarityTable:
+    - rarity: 0
+      weight: 15
+    - rarity: 1
+      weight: 25
+    - rarity: 2
+      weight: 30
+    - rarity: 3
+      weight: 22
+    - rarity: 4
+      weight: 8

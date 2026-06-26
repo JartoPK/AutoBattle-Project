@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: AutoBattle.Core::AutoBattle.Core.Units.PassiveData
   id: ojo_certero
   displayName: Ojo certero
+  rarity: 0
   description: "Probabilidad de golpe cr\xEDtico a distancia."
   icon: {fileID: 0}

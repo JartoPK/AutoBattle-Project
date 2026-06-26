@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: AutoBattle.Core::AutoBattle.Core.Units.PassiveData
   id: flujo_arcano
   displayName: Flujo arcano
+  rarity: 0
   description: "Regenera man\xE1 m\xE1s r\xE1pido."
   icon: {fileID: 0}

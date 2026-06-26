@@ -1,47 +1,80 @@
 using System;
+using System.Collections.Generic;
 
 namespace AutoBattle.Core.Units
 {
     /// <summary>
-    /// Crea unidades nuevas: tira las stats base del baremo universal y elige al
-    /// azar una pasiva del pool de la clase. Único lugar donde "nace" una unidad.
+    /// Crea unidades nuevas: tira las stats base del baremo universal (moduladas
+    /// por la rareza) y elige al azar una pasiva del pool de la clase compatible
+    /// con esa rareza. Único lugar donde "nace" una unidad.
     /// </summary>
     public static class UnitFactory
     {
+        /// <summary>Crea una unidad de la rareza indicada.</summary>
+        /// <param name="rarityConfig">Si es null, se tira de todo el baremo (sin sesgo de rareza).</param>
         /// <param name="rng">RNG opcional para reproducibilidad; si es null se usa uno nuevo.</param>
-        public static UnitInstance Create(ClassData classData, UnitGenerationConfig config, Random rng = null)
+        public static UnitInstance Create(ClassData classData, UnitGenerationConfig config,
+            Rarity rarity, RarityConfig rarityConfig, Random rng = null)
         {
             if (classData == null) throw new ArgumentNullException(nameof(classData));
             if (config == null) throw new ArgumentNullException(nameof(config));
             rng ??= new Random();
 
+            var window = rarityConfig != null
+                ? rarityConfig.GetPercentileWindow(rarity)
+                : new StatRange(0f, 1f);
+
             var stats = new UnitStats
             {
-                hp = config.hp.Roll(rng),
-                attack = config.attack.Roll(rng),
-                attackSpeed = config.attackSpeed.Roll(rng),
-                moveSpeed = config.moveSpeed.Roll(rng),
-                mana = classData.usesMana ? config.mana.Roll(rng) : 0f,
+                hp = RollStat(config.hp, window, rng),
+                attack = RollStat(config.attack, window, rng),
+                attackSpeed = RollStat(config.attackSpeed, window, rng),
+                moveSpeed = RollStat(config.moveSpeed, window, rng),
+                mana = classData.usesMana ? RollStat(config.mana, window, rng) : 0f,
             };
 
-            var passive = PickPassive(classData, rng);
+            var passive = PickPassive(classData, rarity, rng);
 
             return new UnitInstance
             {
                 id = Guid.NewGuid().ToString("N"),
                 displayName = NameGenerator.Next(rng),
                 classId = classData.classId,
+                rarity = rarity,
                 baseStats = stats,
                 passiveId = passive != null ? passive.id : string.Empty,
                 battlesSurvived = 0,
             };
         }
 
-        private static PassiveData PickPassive(ClassData classData, Random rng)
+        /// <summary>Atajo: unidad común tirando de todo el baremo (sin sesgo).</summary>
+        public static UnitInstance Create(ClassData classData, UnitGenerationConfig config, Random rng = null)
+            => Create(classData, config, Rarity.Comun, null, rng);
+
+        // Convierte un percentil [0..1] en un valor real dentro del baremo de la stat.
+        private static float RollStat(StatRange baremo, StatRange percentileWindow, Random rng)
+        {
+            float percentile = percentileWindow.Roll(rng);
+            return baremo.min + percentile * (baremo.max - baremo.min);
+        }
+
+        // Elige una pasiva del pool cuya rareza sea <= la de la unidad.
+        private static PassiveData PickPassive(ClassData classData, Rarity maxRarity, Random rng)
         {
             var pool = classData.possiblePassives;
             if (pool == null || pool.Length == 0) return null;
-            return pool[rng.Next(pool.Length)];
+
+            var eligible = new List<PassiveData>();
+            foreach (var p in pool)
+                if (p != null && p.rarity <= maxRarity) eligible.Add(p);
+
+            if (eligible.Count > 0) return eligible[rng.Next(eligible.Count)];
+
+            // Fallback: ninguna compatible -> la de menor rareza disponible.
+            PassiveData lowest = null;
+            foreach (var p in pool)
+                if (p != null && (lowest == null || p.rarity < lowest.rarity)) lowest = p;
+            return lowest;
         }
     }
 }

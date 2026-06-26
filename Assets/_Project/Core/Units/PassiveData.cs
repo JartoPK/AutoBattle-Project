@@ -14,6 +14,10 @@ namespace AutoBattle.Core.Units
         [Tooltip("Identificador estable. Se guarda en cada unidad; NO cambiarlo tras crear partidas.")]
         public string id;
         public string displayName;
+
+        [Tooltip("Calidad de la pasiva. Una unidad solo puede tener pasivas de rareza <= la suya.")]
+        public Rarity rarity;
+
         [TextArea] public string description;
         public Sprite icon;
     }

@@ -17,6 +17,7 @@ namespace AutoBattle.Core.Units
         public string id;            // GUID único, estable de por vida.
         public string displayName;
         public UnitClass classId;
+        public Rarity rarity;        // Calidad con la que se generó (afecta a sus stats).
         public UnitStats baseStats;  // ADN base. Solo lo modifican cicatrices (Fase 6).
         public string passiveId;     // id de la PassiveData con la que nació.
         public int battlesSurvived;

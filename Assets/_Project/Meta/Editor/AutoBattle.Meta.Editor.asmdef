@@ -1,0 +1,20 @@
+{
+    "name": "AutoBattle.Meta.Editor",
+    "rootNamespace": "AutoBattle.Meta.Editor",
+    "references": [
+        "AutoBattle.Core",
+        "AutoBattle.Meta",
+        "AutoBattle.Core.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

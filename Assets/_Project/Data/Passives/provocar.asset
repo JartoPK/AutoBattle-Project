@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: AutoBattle.Core::AutoBattle.Core.Units.PassiveData
   id: provocar
   displayName: Provocar
+  rarity: 0
   description: Los enemigos cercanos tienden a atacar a esta unidad.
   icon: {fileID: 0}
