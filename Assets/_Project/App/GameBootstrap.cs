@@ -59,7 +59,11 @@ namespace AutoBattle.App
             ShowMap();
         }
 
-        private void OnChanged() => _hud.Refresh();
+        private void OnChanged()
+        {
+            _hud.Refresh();
+            _base.RefreshTroops(_ctx.State.roster);
+        }
 
         private void ShowMap()
         {
@@ -75,6 +79,7 @@ namespace AutoBattle.App
             _recruit.Hide();
             _map.Hide();
             _base.Show(_camera);
+            _base.RefreshTroops(_ctx.State.roster);
             _hud.SetContext(true);
             _hud.Refresh();
         }
