@@ -1,5 +1,6 @@
 using AutoBattle.Core.Units;
 using AutoBattle.Meta.Base;
+using AutoBattle.Meta.Campaign;
 using AutoBattle.Meta.Recruitment;
 using AutoBattle.Meta.Upgrades;
 using UnityEditor;
@@ -32,6 +33,7 @@ namespace AutoBattle.Meta.Editor
             cfg.baseConfig = Load<BaseConfig>("BaseConfig");
             cfg.recruitmentConfig = Load<RecruitmentConfig>("RecruitmentConfig");
             cfg.upgradeTree = Load<UpgradeTree>("UpgradeTree");
+            cfg.campaignMap = CreateCampaign();
             cfg.startingCoins = 1000;
             EditorUtility.SetDirty(cfg);
 
@@ -45,6 +47,61 @@ namespace AutoBattle.Meta.Editor
         {
             MetaSaveService.DeleteSave();
             Debug.Log("[AutoBattle] Partida guardada borrada. La próxima vez que entres en Play empezarás de cero.");
+        }
+
+        // Mapa de campaña de prueba: varios nodos con tipo, dificultad, recompensa,
+        // posición en el mapa y una formación enemiga.
+        private static CampaignMap CreateCampaign()
+        {
+            if (!AssetDatabase.IsValidFolder($"{Data}/Campaign"))
+                AssetDatabase.CreateFolder(Data, "Campaign");
+
+            var nodes = new[]
+            {
+                Node("n1", "Vado del Sur", NodeType.Combate, 1, 120, new Vector2(-16f, -9f),
+                    Form(UnitClass.Guerrero, UnitClass.Guerrero, UnitClass.Arquero)),
+                Node("n2", "Bosque Viejo", NodeType.Combate, 2, 160, new Vector2(-7f, -4f),
+                    Form(UnitClass.Arquero, UnitClass.Arquero, UnitClass.Guerrero, UnitClass.Mago)),
+                Node("n3", "Aldea de reclutas", NodeType.Reclutamiento, 1, 0, new Vector2(2f, 1f),
+                    Form(UnitClass.Guerrero)),
+                Node("n4", "Mina abandonada", NodeType.Recursos, 2, 260, new Vector2(11f, 5f),
+                    Form(UnitClass.Guerrero, UnitClass.Arquero)),
+                Node("n5", "Guarida élite", NodeType.Elite, 3, 320, new Vector2(4f, 11f),
+                    Form(UnitClass.Mago, UnitClass.Mago, UnitClass.Arquero, UnitClass.Guerrero, UnitClass.Guerrero)),
+                Node("n6", "Paso de la montaña", NodeType.Combate, 3, 240, new Vector2(-11f, 9f),
+                    Form(UnitClass.Guerrero, UnitClass.Arquero, UnitClass.Arquero, UnitClass.Mago)),
+                Node("n7", "Fortaleza del Jefe", NodeType.Jefe, 5, 600, new Vector2(17f, 16f),
+                    Form(UnitClass.Guerrero, UnitClass.Guerrero, UnitClass.Mago, UnitClass.Mago, UnitClass.Arquero, UnitClass.Arquero)),
+            };
+
+            var map = CreateOrLoad<CampaignMap>($"{Data}/Campaign/CampaignMap.asset");
+            map.nodes = nodes;
+            EditorUtility.SetDirty(map);
+            return map;
+        }
+
+        private static CampaignNodeData Node(string id, string name, NodeType type, int difficulty,
+            int reward, Vector2 pos, EnemyUnit[] formation)
+        {
+            var n = CreateOrLoad<CampaignNodeData>($"{Data}/Campaign/{id}.asset");
+            n.id = id;
+            n.displayName = name;
+            n.type = type;
+            n.difficulty = difficulty;
+            n.coinReward = reward;
+            n.mapPosition = pos;
+            n.formation = formation;
+            EditorUtility.SetDirty(n);
+            return n;
+        }
+
+        // Coloca las clases dadas en una rejilla 4x3 (rellenando por filas).
+        private static EnemyUnit[] Form(params UnitClass[] classes)
+        {
+            var result = new EnemyUnit[classes.Length];
+            for (int i = 0; i < classes.Length; i++)
+                result[i] = new EnemyUnit { unitClass = classes[i], col = i % 4, row = i / 4 };
+            return result;
         }
 
         private static T Load<T>(string name) where T : Object =>

@@ -1,39 +1,64 @@
+using System;
+using AutoBattle.Meta.Campaign;
 using UnityEngine;
 
 namespace AutoBattle.App
 {
     /// <summary>
-    /// Mundo 3D del mapa (placeholder con primitivas). Los nodos de conquista
-    /// reales llegan en la Fase 7. Coloca la cámara en una vista isométrica.
+    /// Mundo 3D del mapa de conquista. Genera un marcador por nodo del CampaignMap
+    /// (clicable) y permite desplazarse arrastrando. Cámara en vista isométrica.
     /// </summary>
     public class MapWorld
     {
         public readonly GameObject Root;
 
-        private static readonly Vector3 CamPos = new(0f, 15f, -12f);
-        private static readonly Quaternion CamRot = Quaternion.Euler(52f, 0f, 0f);
+        private static readonly Vector3 CamPos = new(0f, 20f, -17f);
+        private static readonly Quaternion CamRot = Quaternion.Euler(54f, 0f, 0f);
 
-        public MapWorld(Transform parent)
+        private readonly MapPanHandler _pan;
+
+        public MapWorld(Transform parent, CampaignMap map, Action<CampaignNodeData> onNodeClicked)
         {
             Root = new GameObject("MapWorld");
             Root.transform.SetParent(parent, false);
 
-            WorldBuilder.Ground(Root.transform, "Sea", new Vector3(0f, -0.25f, 0f), 70f, new Color(0.16f, 0.40f, 0.55f));
-            WorldBuilder.Ground(Root.transform, "Island", Vector3.zero, 26f, new Color(0.35f, 0.62f, 0.30f));
+            WorldBuilder.Ground(Root.transform, "Sea", new Vector3(0f, -0.3f, 0f), 90f, new Color(0.16f, 0.40f, 0.55f));
+            var island = WorldBuilder.Ground(Root.transform, "Island", Vector3.zero, 60f, new Color(0.35f, 0.62f, 0.30f));
+            _pan = island.AddComponent<MapPanHandler>(); // arrastrar sobre la isla mueve la cámara
 
-            // Nodos de ejemplo.
-            WorldBuilder.Box(Root.transform, "Nodo1", new Vector3(-5f, 0.5f, 2f), new Vector3(1.6f, 1f, 1.6f), new Color(0.9f, 0.82f, 0.5f));
-            WorldBuilder.Box(Root.transform, "Nodo2", new Vector3(0f, 0.5f, -1f), new Vector3(1.6f, 1f, 1.6f), new Color(0.9f, 0.82f, 0.5f));
-            WorldBuilder.Box(Root.transform, "NodoJefe", new Vector3(5f, 0.7f, 3f), new Vector3(1.8f, 1.4f, 1.8f), new Color(0.8f, 0.45f, 0.4f));
-            WorldBuilder.Label3D(Root.transform, "Expediciones (Fase 7)", new Vector3(0f, 2.4f, 4f));
+            if (map != null && map.nodes != null)
+                foreach (var node in map.nodes)
+                    CreateNodeMarker(node, onNodeClicked);
         }
 
         public void Show(Camera cam)
         {
             Root.SetActive(true);
             cam.transform.SetPositionAndRotation(CamPos, CamRot);
+            _pan.cam = cam;
         }
 
         public void Hide() => Root.SetActive(false);
+
+        private void CreateNodeMarker(CampaignNodeData node, Action<CampaignNodeData> onClicked)
+        {
+            var pos = new Vector3(node.mapPosition.x, 0.6f, node.mapPosition.y);
+            var marker = WorldBuilder.Box(Root.transform, $"Node_{node.id}", pos,
+                new Vector3(1.8f, 1.2f, 1.8f), NodeColor(node.type));
+            marker.AddComponent<ClickableBuilding>().OnClicked = () => onClicked?.Invoke(node);
+
+            WorldBuilder.Label3D(Root.transform, $"{node.displayName}\nDif {node.difficulty}",
+                pos + new Vector3(0f, 1.6f, 0f));
+        }
+
+        private static Color NodeColor(NodeType type) => type switch
+        {
+            NodeType.Combate => new Color(0.85f, 0.80f, 0.5f),
+            NodeType.Elite => new Color(0.9f, 0.55f, 0.2f),
+            NodeType.Jefe => new Color(0.85f, 0.3f, 0.3f),
+            NodeType.Reclutamiento => new Color(0.4f, 0.6f, 0.9f),
+            NodeType.Recursos => new Color(0.9f, 0.85f, 0.3f),
+            _ => Color.white,
+        };
     }
 }

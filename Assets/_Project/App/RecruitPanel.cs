@@ -158,32 +158,42 @@ namespace AutoBattle.App
 
             foreach (var u in _ctx.State.roster.units)
             {
-                var row = UIFactory.Panel(_listContent, "Row", new Color(1, 1, 1, 0.05f));
-                row.AddComponent<LayoutElement>().preferredHeight = 50;
-                var hl = row.AddComponent<HorizontalLayoutGroup>();
-                hl.spacing = 8; hl.padding = new RectOffset(10, 10, 0, 0);
-                hl.childAlignment = TextAnchor.MiddleLeft;
-                hl.childControlWidth = hl.childControlHeight = true;
-                hl.childForceExpandWidth = false; hl.childForceExpandHeight = true;
-
                 if (u.hasClass)
                 {
+                    var row = UIFactory.Panel(_listContent, "Row", new Color(1, 1, 1, 0.05f));
+                    row.AddComponent<LayoutElement>().preferredHeight = 50;
                     var lbl = UIFactory.Label(row.transform,
                         $"[{RarityVisuals.Name(u.rarity)}] {u.classId} · {u.displayName} — {Stats(u)} · pasiva '{u.passiveId}'",
                         23, TextAnchor.MiddleLeft, RarityVisuals.Of(u.rarity));
-                    lbl.gameObject.AddComponent<LayoutElement>().flexibleWidth = 1;
+                    UIFactory.Stretch(lbl.rectTransform, 12, 12);
                 }
                 else
                 {
+                    // Tropa sin clase: stats arriba, botones de clase debajo (sin solaparse).
+                    var row = UIFactory.Panel(_listContent, "Row", new Color(1, 1, 1, 0.05f));
+                    row.AddComponent<LayoutElement>().preferredHeight = 96;
+                    var col = row.AddComponent<VerticalLayoutGroup>();
+                    col.padding = new RectOffset(12, 12, 6, 6); col.spacing = 4;
+                    col.childAlignment = TextAnchor.UpperLeft;
+                    col.childControlWidth = col.childControlHeight = true;
+                    col.childForceExpandWidth = true; col.childForceExpandHeight = false;
+
                     var lbl = UIFactory.Label(row.transform,
-                        $"[{RarityVisuals.Name(u.rarity)}] {u.displayName} — {Stats(u)} · SIN CLASE:",
+                        $"[{RarityVisuals.Name(u.rarity)}] {u.displayName} — {Stats(u)} · SIN CLASE, elige:",
                         23, TextAnchor.MiddleLeft, RarityVisuals.Of(u.rarity));
-                    lbl.gameObject.AddComponent<LayoutElement>().flexibleWidth = 1;
+                    lbl.gameObject.AddComponent<LayoutElement>().preferredHeight = 34;
+
+                    var btnRow = UIFactory.Panel(row.transform, "Btns", new Color(0, 0, 0, 0));
+                    btnRow.AddComponent<LayoutElement>().preferredHeight = 44;
+                    var hl = btnRow.AddComponent<HorizontalLayoutGroup>();
+                    hl.spacing = 8; hl.childAlignment = TextAnchor.MiddleLeft;
+                    hl.childControlWidth = hl.childControlHeight = true;
+                    hl.childForceExpandWidth = false; hl.childForceExpandHeight = true;
 
                     string id = u.id;
-                    ClassButton(row.transform, "Guerrero", id, UnitClass.Guerrero);
-                    ClassButton(row.transform, "Arquero", id, UnitClass.Arquero);
-                    ClassButton(row.transform, "Mago", id, UnitClass.Mago);
+                    ClassButton(btnRow.transform, "Guerrero", id, UnitClass.Guerrero);
+                    ClassButton(btnRow.transform, "Arquero", id, UnitClass.Arquero);
+                    ClassButton(btnRow.transform, "Mago", id, UnitClass.Mago);
                 }
             }
         }

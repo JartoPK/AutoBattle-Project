@@ -4,12 +4,20 @@ namespace AutoBattle.App
 {
     /// <summary>
     /// Mueve lentamente un objeto por el suelo de la base hacia puntos aleatorios,
-    /// con pequeñas pausas. Da vida visual a las tropas (cubos) en la base.
+    /// evitando las huellas de los edificios (obstáculos). Da vida visual a las
+    /// tropas (cubos) en la base.
     /// </summary>
     public class Wanderer : MonoBehaviour
     {
-        public float radius = 12f;
+        public struct Obstacle
+        {
+            public Vector2 center;
+            public float radius;
+        }
+
+        public float radius = 11f;
         public float speed = 1.2f;
+        public Obstacle[] obstacles;
 
         private float _y;
         private Vector3 _target;
@@ -31,6 +39,14 @@ namespace AutoBattle.App
 
             var pos = transform.position;
             var next = Vector3.MoveTowards(pos, _target, speed * Time.deltaTime);
+
+            // Si el siguiente paso entraría en un edificio, gira hacia otro punto.
+            if (Blocked(next))
+            {
+                PickTarget();
+                return;
+            }
+
             transform.position = next;
 
             var dir = _target - pos;
@@ -46,7 +62,23 @@ namespace AutoBattle.App
             }
         }
 
-        private void PickTarget() =>
-            _target = new Vector3(Random.Range(-radius, radius), _y, Random.Range(-radius, radius));
+        private bool Blocked(Vector3 p)
+        {
+            if (obstacles == null) return false;
+            var xz = new Vector2(p.x, p.z);
+            foreach (var o in obstacles)
+                if (Vector2.Distance(xz, o.center) < o.radius) return true;
+            return false;
+        }
+
+        private void PickTarget()
+        {
+            for (int i = 0; i < 14; i++)
+            {
+                var c = new Vector3(Random.Range(-radius, radius), _y, Random.Range(-radius, radius));
+                if (!Blocked(c)) { _target = c; return; }
+            }
+            _target = transform.position; // sin hueco libre: quédate quieto
+        }
     }
 }

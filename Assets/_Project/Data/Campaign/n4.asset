@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20fc24347daa98340995d79d5c197512, type: 3}
+  m_Name: n4
+  m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Campaign.CampaignNodeData
+  id: n4
+  displayName: Mina abandonada
+  type: 4
+  difficulty: 2
+  coinReward: 260
+  mapPosition: {x: 11, y: 5}
+  formation:
+  - unitClass: 0
+    col: 0
+    row: 0
+  - unitClass: 1
+    col: 1
+    row: 0

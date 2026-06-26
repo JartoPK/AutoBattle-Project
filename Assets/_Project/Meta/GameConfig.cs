@@ -1,5 +1,6 @@
 using AutoBattle.Core.Units;
 using AutoBattle.Meta.Base;
+using AutoBattle.Meta.Campaign;
 using AutoBattle.Meta.Recruitment;
 using AutoBattle.Meta.Upgrades;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace AutoBattle.Meta
         public BaseConfig baseConfig;
         public RecruitmentConfig recruitmentConfig;
         public UpgradeTree upgradeTree;
+        public CampaignMap campaignMap;
 
         [Header("Partida nueva")]
         public int startingCoins = 1000;

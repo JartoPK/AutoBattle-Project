@@ -18,4 +18,5 @@ MonoBehaviour:
   baseConfig: {fileID: 11400000, guid: c0366dd379b65e04e8ae4d04566c47a9, type: 2}
   recruitmentConfig: {fileID: 11400000, guid: 0165cf05ff8881f4194aec19352f24b5, type: 2}
   upgradeTree: {fileID: 11400000, guid: 3f0d0f59b2aa99643885b526c777441d, type: 2}
+  campaignMap: {fileID: 11400000, guid: e52a47d46c682f34cac4aa23cc448e27, type: 2}
   startingCoins: 1000

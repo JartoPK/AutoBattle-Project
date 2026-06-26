@@ -20,6 +20,8 @@ namespace AutoBattle.App
         private BaseWorld _base;
         private Hud _hud;
         private RecruitPanel _recruit;
+        private UpgradeTreePanel _tree;
+        private NodeInfoPanel _nodeInfo;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Boot()
@@ -52,9 +54,11 @@ namespace AutoBattle.App
             var canvas = CreateCanvas();
             _hud = new Hud(canvas, _ctx, ShowBase, ShowMap);
             _recruit = new RecruitPanel(canvas, _ctx, OnChanged); // después del HUD: el modal queda por encima
+            _tree = new UpgradeTreePanel(canvas, _ctx, OnChanged);
+            _nodeInfo = new NodeInfoPanel(canvas);
 
-            _map = new MapWorld(transform);
-            _base = new BaseWorld(transform, () => _recruit.Show());
+            _map = new MapWorld(transform, config.campaignMap, node => _nodeInfo.Show(node));
+            _base = new BaseWorld(transform, () => _recruit.Show(), () => _tree.Show());
 
             ShowMap();
         }
@@ -68,6 +72,8 @@ namespace AutoBattle.App
         private void ShowMap()
         {
             _recruit.Hide();
+            _tree.Hide();
+            _nodeInfo.Hide();
             _base.Hide();
             _map.Show(_camera);
             _hud.SetContext(false);
@@ -77,6 +83,8 @@ namespace AutoBattle.App
         private void ShowBase()
         {
             _recruit.Hide();
+            _tree.Hide();
+            _nodeInfo.Hide();
             _map.Hide();
             _base.Show(_camera);
             _base.RefreshTroops(_ctx.State.roster);

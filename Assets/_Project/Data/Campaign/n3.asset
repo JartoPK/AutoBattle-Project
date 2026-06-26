@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20fc24347daa98340995d79d5c197512, type: 3}
+  m_Name: n3
+  m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Campaign.CampaignNodeData
+  id: n3
+  displayName: Aldea de reclutas
+  type: 3
+  difficulty: 1
+  coinReward: 0
+  mapPosition: {x: 2, y: 1}
+  formation:
+  - unitClass: 0
+    col: 0
+    row: 0
