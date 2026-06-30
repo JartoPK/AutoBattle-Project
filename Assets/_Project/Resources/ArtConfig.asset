@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8412089139f3a844fa091bc44d9413a0, type: 3}
+  m_Name: ArtConfig
+  m_EditorClassIdentifier: AutoBattle.App::AutoBattle.App.ArtConfig
+  warrior:
+    idle:
+    - {fileID: 7384290322352760091, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    - {fileID: 5558041129755138300, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    - {fileID: 5494728702781700201, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    - {fileID: 855971943943930739, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    - {fileID: 8590257050535953886, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    - {fileID: -1175184007495930954, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    - {fileID: -4675935811743254547, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    - {fileID: 1839488653993705794, guid: 63555c658eb534f48acbb1ba682fbec3, type: 3}
+    run:
+    - {fileID: -432731726981308715, guid: d68bc01307d42455d93569208f8296bc, type: 3}
+    - {fileID: 8551124423323264409, guid: d68bc01307d42455d93569208f8296bc, type: 3}
+    - {fileID: -8600065048725663906, guid: d68bc01307d42455d93569208f8296bc, type: 3}
+    - {fileID: 3241423924572654580, guid: d68bc01307d42455d93569208f8296bc, type: 3}
+    - {fileID: -5828329696384875631, guid: d68bc01307d42455d93569208f8296bc, type: 3}
+    - {fileID: 2022560608615539102, guid: d68bc01307d42455d93569208f8296bc, type: 3}
+  archer:
+    idle:
+    - {fileID: 7257567913506708742, guid: 72c22f22ea5e4488390ba536cd5ab98d, type: 3}
+    - {fileID: -7989796299022447421, guid: 72c22f22ea5e4488390ba536cd5ab98d, type: 3}
+    - {fileID: 7725435616784934678, guid: 72c22f22ea5e4488390ba536cd5ab98d, type: 3}
+    - {fileID: -1293103732667120055, guid: 72c22f22ea5e4488390ba536cd5ab98d, type: 3}
+    - {fileID: 427913027731640163, guid: 72c22f22ea5e4488390ba536cd5ab98d, type: 3}
+    - {fileID: -9045297040117572726, guid: 72c22f22ea5e4488390ba536cd5ab98d, type: 3}
+    run:
+    - {fileID: 8882666270506729424, guid: a2db8ff0b36884d3680f752d33764b12, type: 3}
+    - {fileID: 8418572898541717210, guid: a2db8ff0b36884d3680f752d33764b12, type: 3}
+    - {fileID: 4917221495796577052, guid: a2db8ff0b36884d3680f752d33764b12, type: 3}
+    - {fileID: 1313344751431586703, guid: a2db8ff0b36884d3680f752d33764b12, type: 3}
+  monk:
+    idle:
+    - {fileID: 4723107735738678597, guid: 7ba4178767e424c47b91888898a1fdc4, type: 3}
+    - {fileID: -7385789195546760866, guid: 7ba4178767e424c47b91888898a1fdc4, type: 3}
+    - {fileID: 3234629978573100161, guid: 7ba4178767e424c47b91888898a1fdc4, type: 3}
+    - {fileID: 6373048116405451881, guid: 7ba4178767e424c47b91888898a1fdc4, type: 3}
+    - {fileID: 7264182050183361747, guid: 7ba4178767e424c47b91888898a1fdc4, type: 3}
+    - {fileID: -2834552850196481573, guid: 7ba4178767e424c47b91888898a1fdc4, type: 3}
+    run:
+    - {fileID: 4944230376442633554, guid: 38aaba693b195407d8ac56f98b202860, type: 3}
+    - {fileID: -2274363484027164459, guid: 38aaba693b195407d8ac56f98b202860, type: 3}
+    - {fileID: 8284087734974297348, guid: 38aaba693b195407d8ac56f98b202860, type: 3}
+    - {fileID: 5304202850863732263, guid: 38aaba693b195407d8ac56f98b202860, type: 3}
+  pawn:
+    idle:
+    - {fileID: -5948806968594788206, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    - {fileID: -3890830800090718979, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    - {fileID: 5745166470278179504, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    - {fileID: -6422090140873712968, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    - {fileID: 7767364186329714561, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    - {fileID: -5623599378145798578, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    - {fileID: -5368615170522500559, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    - {fileID: 5475363174786605065, guid: 4c87a6310f87c47f1b785669e6191f00, type: 3}
+    run:
+    - {fileID: 3948441758208983171, guid: 4f48e4ab7a963447da8d6a57e0d3fb72, type: 3}
+    - {fileID: 2305471599192555470, guid: 4f48e4ab7a963447da8d6a57e0d3fb72, type: 3}
+    - {fileID: -7094969777387991619, guid: 4f48e4ab7a963447da8d6a57e0d3fb72, type: 3}
+    - {fileID: -4352081444224747174, guid: 4f48e4ab7a963447da8d6a57e0d3fb72, type: 3}
+    - {fileID: 9036425764018463110, guid: 4f48e4ab7a963447da8d6a57e0d3fb72, type: 3}
+    - {fileID: -5774403828569277791, guid: 4f48e4ab7a963447da8d6a57e0d3fb72, type: 3}
+  waterColor: {r: 0.31, g: 0.56, b: 0.62, a: 1}
+  barracks: {fileID: 21300000, guid: 4140465d2d71b4a6a83a1be32f0a9880, type: 3}
+  castle: {fileID: 21300000, guid: 5fef2d88b09824faba4be40a870c347e, type: 3}
+  monastery: {fileID: 21300000, guid: a45aff6aa2c5d4d5f879c10f0231ba12, type: 3}
+  house: {fileID: 21300000, guid: f64d3993d34d4410e83e766d40059c1b, type: 3}

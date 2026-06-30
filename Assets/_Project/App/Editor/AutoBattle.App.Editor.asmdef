@@ -1,0 +1,19 @@
+{
+    "name": "AutoBattle.App.Editor",
+    "rootNamespace": "AutoBattle.App.Editor",
+    "references": [
+        "AutoBattle.App",
+        "Unity.2D.Tilemap.Extras"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
