@@ -35,8 +35,15 @@ namespace AutoBattle.App.Editor
             cfg.ribbonButton = Spr($"{TS}/UI Elements/Ribbons/SmallRibbons 4.png");
             cfg.woodTable = Spr($"{TS}/UI Elements/Wood Table/WoodTable_Slots.png");
             cfg.skillNodeButton = Spr($"{TS}/UI Elements/Buttons/TinySquareBlueButton.png");
-            cfg.swordsHeader = Spr($"{TS}/UI Elements/Swords/Swords 2.png");
+            cfg.swordsHeader = Spr($"{TS}/UI Elements/Ribbons/SmallRibbons 7.png");
             cfg.detailPaper = Spr($"{TS}/UI Elements/Papers/RegularPaper.png");
+            cfg.ribbonVolver = Spr($"{TS}/UI Elements/Ribbons/SmallRibbons 6.png");
+            cfg.ribbonBuy = Spr($"{TS}/UI Elements/Ribbons/SmallRibbons 10.png");
+            cfg.nodeIconEconomy = Spr($"{TS}/UI Elements/Icons/Icon_03.png");
+            cfg.nodeIconWarrior = Spr($"{TS}/UI Elements/Human Avatars/Avatars_01.png");
+            cfg.nodeIconArcher = Spr($"{TS}/UI Elements/Human Avatars/Avatars_03.png");
+            cfg.nodeIconMage = Spr($"{TS}/UI Elements/Human Avatars/Avatars_04.png");
+            cfg.nodeIconRecruits = Spr($"{TS}/UI Elements/Icons/Icon_04.png");
 
             EditorUtility.SetDirty(cfg);
             AssetDatabase.SaveAssets();

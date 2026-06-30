@@ -83,3 +83,12 @@ MonoBehaviour:
   ribbonButton: {fileID: 21300000, guid: b4344f1ed611245fc9b1e0d04fa14e56, type: 3}
   woodTable: {fileID: 21300000, guid: 9483951be6fb8453f9d2f75614e33c86, type: 3}
   skillNodeButton: {fileID: 21300000, guid: 0de4de84fd02a4139b7f5756f7bcfc24, type: 3}
+  swordsHeader: {fileID: 21300000, guid: b81d1455d0c2e48f497aeb902b9f1c86, type: 3}
+  detailPaper: {fileID: 21300000, guid: ffac7e0b474194ffd90e3892b95dbac8, type: 3}
+  ribbonVolver: {fileID: 21300000, guid: c87c6b571446d477b8ead9d0db22dbcc, type: 3}
+  ribbonBuy: {fileID: 21300000, guid: 3f511b3c20d254268b96d476bb4eb70e, type: 3}
+  nodeIconEconomy: {fileID: 21300000, guid: 7a0f4fab77b344f7b9386a7c87e492b1, type: 3}
+  nodeIconWarrior: {fileID: 21300000, guid: 2334fa2b3b6b3492281b0993c123cfac, type: 3}
+  nodeIconArcher: {fileID: 21300000, guid: 8fd2d0449599e4f7a9a1f1f170b6a2b0, type: 3}
+  nodeIconMage: {fileID: 21300000, guid: f846c6072ceb0445bbcb59c41b57a5cb, type: 3}
+  nodeIconRecruits: {fileID: 21300000, guid: a7b12afab90f94b99b54ac34b293b2be, type: 3}

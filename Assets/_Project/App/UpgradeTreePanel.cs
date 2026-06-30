@@ -32,8 +32,6 @@ namespace AutoBattle.App
         private static readonly Color TintAvailable = Color.white;
         private static readonly Color TintOwned = new(0.5f, 1f, 0.6f);
 
-        private static readonly string[] Icons = { "⚔", "🛡", "❤", "⚡", "✦", "☄", "◆", "★", "⬧", "⊕" };
-
         public UpgradeTreePanel(Transform canvas, GameContext ctx, ArtConfig art, Action onChanged)
         {
             _ctx = ctx;
@@ -57,33 +55,29 @@ namespace AutoBattle.App
                 tableImg.raycastTarget = false;
             }
 
-            // ── Header: Swords icon + "UPGRADES" (top center) ──
+            // ── Header: Swords icon filling behind "UPGRADES" text ──
             var headerContainer = new GameObject("Header", typeof(RectTransform));
             headerContainer.transform.SetParent(Root.transform, false);
             var headerRT = headerContainer.GetComponent<RectTransform>();
             headerRT.anchorMin = new Vector2(0.5f, 1f);
             headerRT.anchorMax = new Vector2(0.5f, 1f);
             headerRT.pivot = new Vector2(0.5f, 1f);
-            headerRT.sizeDelta = new Vector2(350, 100);
-            headerRT.anchoredPosition = new Vector2(0, -10);
+            headerRT.sizeDelta = new Vector2(650, 130);
+            headerRT.anchoredPosition = new Vector2(0, 10);
 
             if (art != null && art.swordsHeader != null)
             {
                 var swordsImg = new GameObject("SwordsIcon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
                 swordsImg.transform.SetParent(headerContainer.transform, false);
-                var srt = swordsImg.GetComponent<RectTransform>();
-                srt.anchorMin = srt.anchorMax = srt.pivot = new Vector2(0.5f, 0.5f);
-                srt.sizeDelta = new Vector2(350, 100);
-                srt.anchoredPosition = Vector2.zero;
+                UIFactory.Stretch(swordsImg.GetComponent<RectTransform>());
                 var si = swordsImg.GetComponent<Image>();
                 si.sprite = art.swordsHeader;
                 si.preserveAspect = true;
                 si.raycastTarget = false;
             }
 
-            var headerLabel = UIFactory.Label(headerContainer.transform, "UPGRADES", 32, TextAnchor.MiddleCenter, Color.white);
+            var headerLabel = UIFactory.Label(headerContainer.transform, "UPGRADES", 36, TextAnchor.MiddleCenter, Color.white);
             UIFactory.Stretch(headerLabel.rectTransform);
-            headerLabel.rectTransform.anchoredPosition = new Vector2(0, -10);
 
             // ── Coins (top right, same style as base HUD) ──
             var coinContainer = new GameObject("CoinContainer", typeof(RectTransform));
@@ -129,10 +123,11 @@ namespace AutoBattle.App
             var csf = coinContent.AddComponent<ContentSizeFitter>();
             csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            // ── VOLVER button (bottom left, ribbon style) ──
-            if (art != null && art.ribbonButton != null)
+            // ── VOLVER button (bottom left, SmallRibbons 6) ──
+            var volverSprite = art != null && art.ribbonVolver != null ? art.ribbonVolver : (art != null ? art.ribbonButton : null);
+            if (volverSprite != null)
             {
-                var volverBtn = UIFactory.ImageButton(Root.transform, art.ribbonButton, new Vector2(260, 100), Hide);
+                var volverBtn = UIFactory.ImageButton(Root.transform, volverSprite, new Vector2(260, 100), Hide);
                 UIFactory.Anchor(volverBtn.GetComponent<RectTransform>(), new Vector2(0, 0), new Vector2(260, 100), new Vector2(15, 15));
                 var volverTxt = UIFactory.Label(volverBtn.transform, "VOLVER", 30, TextAnchor.MiddleCenter, Color.white);
                 UIFactory.Stretch(volverTxt.rectTransform);
@@ -174,18 +169,8 @@ namespace AutoBattle.App
             dpRT.offsetMin = new Vector2(-340, 80);
             dpRT.offsetMax = new Vector2(-15, -120);
 
-            if (art != null && art.detailPaper != null)
-            {
-                var paperImg = _detailPanel.AddComponent<Image>();
-                paperImg.sprite = art.detailPaper;
-                paperImg.type = Image.Type.Simple;
-                paperImg.preserveAspect = false;
-            }
-            else
-            {
-                var paperImg = _detailPanel.AddComponent<Image>();
-                paperImg.color = new Color(0.9f, 0.85f, 0.7f, 0.95f);
-            }
+            var paperImg = _detailPanel.AddComponent<Image>();
+            paperImg.color = new Color(0.92f, 0.87f, 0.75f, 0.95f);
 
             // Paper content
             var paperContent = new GameObject("PaperContent", typeof(RectTransform));
@@ -193,12 +178,12 @@ namespace AutoBattle.App
             var pcRT = paperContent.GetComponent<RectTransform>();
             pcRT.anchorMin = Vector2.zero;
             pcRT.anchorMax = Vector2.one;
-            pcRT.offsetMin = new Vector2(30, 30);
-            pcRT.offsetMax = new Vector2(-30, -30);
+            pcRT.offsetMin = new Vector2(25, 25);
+            pcRT.offsetMax = new Vector2(-25, -25);
 
             var vlg = paperContent.AddComponent<VerticalLayoutGroup>();
-            vlg.spacing = 12;
-            vlg.padding = new RectOffset(10, 10, 20, 20);
+            vlg.spacing = 15;
+            vlg.padding = new RectOffset(10, 10, 15, 15);
             vlg.childAlignment = TextAnchor.UpperCenter;
             vlg.childControlWidth = vlg.childControlHeight = true;
             vlg.childForceExpandWidth = true;
@@ -221,13 +206,25 @@ namespace AutoBattle.App
             _detailStatus = UIFactory.Label(paperContent.transform, "", 18, TextAnchor.MiddleCenter, new Color(0.5f, 0.2f, 0.1f));
             _detailStatus.gameObject.AddComponent<LayoutElement>().preferredHeight = 30;
 
-            var buyBtnGO = UIFactory.Button(paperContent.transform, "COMPRAR", new Color(0.2f, 0.55f, 0.3f), OnBuy);
-            _buyBtn = buyBtnGO.GetComponent<Button>();
-            var buyLE = buyBtnGO.AddComponent<LayoutElement>();
-            buyLE.preferredHeight = 55;
-            buyLE.preferredWidth = 200;
-            _buyLabel = buyBtnGO.GetComponentInChildren<Text>();
-            _buyLabel.fontSize = 24;
+            // Buy button — ribbon style
+            if (art != null && art.ribbonBuy != null)
+            {
+                _buyBtn = UIFactory.ImageButton(paperContent.transform, art.ribbonBuy, new Vector2(240, 70), OnBuy);
+                var buyLE = _buyBtn.gameObject.AddComponent<LayoutElement>();
+                buyLE.preferredHeight = 70;
+                buyLE.preferredWidth = 240;
+                _buyLabel = UIFactory.Label(_buyBtn.transform, "COMPRAR", 24, TextAnchor.MiddleCenter, Color.white);
+                UIFactory.Stretch(_buyLabel.rectTransform);
+            }
+            else
+            {
+                _buyBtn = UIFactory.Button(paperContent.transform, "COMPRAR", new Color(0.2f, 0.55f, 0.3f), OnBuy);
+                var buyLE = _buyBtn.gameObject.AddComponent<LayoutElement>();
+                buyLE.preferredHeight = 55;
+                buyLE.preferredWidth = 200;
+                _buyLabel = _buyBtn.GetComponentInChildren<Text>();
+                _buyLabel.fontSize = 24;
+            }
 
             _detailPanel.SetActive(false);
 
@@ -328,9 +325,16 @@ namespace AutoBattle.App
                     : new Color(0.18f, 0.18f, 0.22f));
             }
 
-            int idx = Mathf.Abs(node.id.GetHashCode()) % Icons.Length;
-            var icon = UIFactory.Label(nodeGO.transform, Icons[idx], 34, TextAnchor.MiddleCenter, Color.white);
-            UIFactory.Stretch(icon.rectTransform);
+            // Sprite icon based on node type
+            var iconSprite = GetNodeIcon(node);
+            if (iconSprite != null)
+            {
+                var iconImg = UIFactory.Icon(nodeGO.transform, iconSprite, new Vector2(60, 60));
+                var irt = iconImg.rectTransform;
+                irt.anchorMin = irt.anchorMax = irt.pivot = new Vector2(0.5f, 0.5f);
+                irt.anchoredPosition = Vector2.zero;
+                iconImg.raycastTarget = false;
+            }
 
             var btn = nodeGO.AddComponent<Button>();
             btn.targetGraphic = img;
@@ -341,15 +345,32 @@ namespace AutoBattle.App
             var cap = node;
             btn.onClick.AddListener(() => SelectNode(cap));
 
-            var label = UIFactory.Label(nodeGO.transform, node.displayName,
-                14, TextAnchor.UpperCenter, new Color(1, 1, 1, 0.9f));
-            var lrt = label.rectTransform;
-            lrt.anchorMin = lrt.anchorMax = lrt.pivot = new Vector2(0.5f, 1f);
-            lrt.sizeDelta = new Vector2(160, 25);
-            lrt.anchoredPosition = new Vector2(0, -nodeSize / 2f - 4f);
-            label.horizontalOverflow = HorizontalWrapMode.Overflow;
-
             return new NodeView { go = nodeGO, node = node };
+        }
+
+        private Sprite GetNodeIcon(UpgradeNode node)
+        {
+            if (_art == null) return null;
+
+            // Recruit/roster/inheritance nodes
+            if (node.effect == UpgradeEffectType.IncreaseRosterCap ||
+                node.effect == UpgradeEffectType.InheritanceQualityBonus)
+                return _art.nodeIconRecruits;
+
+            // Economy nodes (base level, recruit quality, coins)
+            if (node.effect == UpgradeEffectType.IncreaseBaseLevel ||
+                node.effect == UpgradeEffectType.RecruitQualityBonus)
+                return _art.nodeIconEconomy;
+
+            // Class-specific by branch
+            return node.branch switch
+            {
+                UpgradeBranch.Guerrero => _art.nodeIconWarrior,
+                UpgradeBranch.Arquero => _art.nodeIconArcher,
+                UpgradeBranch.Mago => _art.nodeIconMage,
+                UpgradeBranch.Comandante => _art.nodeIconEconomy,
+                _ => _art.nodeIconEconomy,
+            };
         }
 
         private void SelectNode(UpgradeNode node)

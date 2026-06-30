@@ -75,7 +75,7 @@ namespace AutoBattle.App
 
             var canvas = CreateCanvas();
             _hud = new Hud(canvas, _ctx, art, ShowBase, ShowMap);
-            _recruit = new RecruitPanel(canvas, _ctx, OnChanged);
+            _recruit = new RecruitPanel(canvas, _ctx, art, OnChanged);
             _tree = new UpgradeTreePanel(canvas, _ctx, art, OnChanged);
             _nodeInfo = new NodeInfoPanel(canvas);
 

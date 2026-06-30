@@ -42,6 +42,15 @@ namespace AutoBattle.App
         public Sprite skillNodeButton;
         public Sprite swordsHeader;
         public Sprite detailPaper;
+        public Sprite ribbonVolver;
+        public Sprite ribbonBuy;
+
+        [Header("Skill Tree Node Icons")]
+        public Sprite nodeIconEconomy;
+        public Sprite nodeIconWarrior;
+        public Sprite nodeIconArcher;
+        public Sprite nodeIconMage;
+        public Sprite nodeIconRecruits;
 
         public UnitAnim AnimFor(UnitClass cls) => cls switch
         {
