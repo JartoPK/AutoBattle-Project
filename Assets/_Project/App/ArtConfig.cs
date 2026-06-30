@@ -40,6 +40,8 @@ namespace AutoBattle.App
         public Sprite ribbonButton;
         public Sprite woodTable;
         public Sprite skillNodeButton;
+        public Sprite swordsHeader;
+        public Sprite detailPaper;
 
         public UnitAnim AnimFor(UnitClass cls) => cls switch
         {

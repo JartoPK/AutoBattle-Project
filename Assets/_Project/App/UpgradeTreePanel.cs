@@ -13,11 +13,20 @@ namespace AutoBattle.App
         private readonly GameContext _ctx;
         private readonly Action _onChanged;
         private readonly ArtConfig _art;
-        private readonly Text _info;
-        private readonly Text _status;
+        private readonly Text _coinText;
         private readonly RectTransform _treeContent;
         private readonly List<NodeView> _nodeViews = new();
         private readonly List<GameObject> _lines = new();
+
+        // Detail panel
+        private readonly GameObject _detailPanel;
+        private readonly Text _detailTitle;
+        private readonly Text _detailDesc;
+        private readonly Text _detailCost;
+        private readonly Button _buyBtn;
+        private readonly Text _buyLabel;
+        private readonly Text _detailStatus;
+        private UpgradeNode _selectedNode;
 
         private static readonly Color TintLocked = new(0.4f, 0.4f, 0.4f);
         private static readonly Color TintAvailable = Color.white;
@@ -31,11 +40,11 @@ namespace AutoBattle.App
             _art = art;
             _onChanged = onChanged;
 
-            // Opaque base so nothing behind is visible
+            // ── Root (opaque) ──
             Root = UIFactory.Panel(canvas, "UpgradeTreePanel", new Color(0.08f, 0.06f, 0.04f, 1f));
             UIFactory.Stretch(Root.GetComponent<RectTransform>());
 
-            // Wood table on top, stretched edge-to-edge
+            // Wood table BG
             if (art != null && art.woodTable != null)
             {
                 var tableGO = new GameObject("WoodBG", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
@@ -48,36 +57,99 @@ namespace AutoBattle.App
                 tableImg.raycastTarget = false;
             }
 
-            var title = UIFactory.Label(Root.transform, "UPGRADES TREE", 36, TextAnchor.UpperLeft, Color.white);
-            UIFactory.Anchor(title.rectTransform, new Vector2(0, 1), new Vector2(400, 50), new Vector2(20, -15));
+            // ── Header: Swords icon + "UPGRADES" (top center) ──
+            var headerContainer = new GameObject("Header", typeof(RectTransform));
+            headerContainer.transform.SetParent(Root.transform, false);
+            var headerRT = headerContainer.GetComponent<RectTransform>();
+            headerRT.anchorMin = new Vector2(0.5f, 1f);
+            headerRT.anchorMax = new Vector2(0.5f, 1f);
+            headerRT.pivot = new Vector2(0.5f, 1f);
+            headerRT.sizeDelta = new Vector2(350, 100);
+            headerRT.anchoredPosition = new Vector2(0, -10);
 
-            _info = UIFactory.Label(Root.transform, "", 26, TextAnchor.UpperLeft, new Color(1f, 0.85f, 0.3f));
-            UIFactory.Anchor(_info.rectTransform, new Vector2(0, 1), new Vector2(300, 40), new Vector2(20, -65));
+            if (art != null && art.swordsHeader != null)
+            {
+                var swordsImg = new GameObject("SwordsIcon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                swordsImg.transform.SetParent(headerContainer.transform, false);
+                var srt = swordsImg.GetComponent<RectTransform>();
+                srt.anchorMin = srt.anchorMax = srt.pivot = new Vector2(0.5f, 0.5f);
+                srt.sizeDelta = new Vector2(350, 100);
+                srt.anchoredPosition = Vector2.zero;
+                var si = swordsImg.GetComponent<Image>();
+                si.sprite = art.swordsHeader;
+                si.preserveAspect = true;
+                si.raycastTarget = false;
+            }
 
-            _status = UIFactory.Label(Root.transform, "", 22, TextAnchor.LowerLeft, new Color(1, 0.9f, 0.6f));
-            UIFactory.Anchor(_status.rectTransform, new Vector2(0, 0), new Vector2(900, 35), new Vector2(20, 15));
+            var headerLabel = UIFactory.Label(headerContainer.transform, "UPGRADES", 32, TextAnchor.MiddleCenter, Color.white);
+            UIFactory.Stretch(headerLabel.rectTransform);
+            headerLabel.rectTransform.anchoredPosition = new Vector2(0, -10);
 
-            // "VOLVER" button with ribbon style (same as BASE/MAPA)
+            // ── Coins (top right, same style as base HUD) ──
+            var coinContainer = new GameObject("CoinContainer", typeof(RectTransform));
+            coinContainer.transform.SetParent(Root.transform, false);
+            var coinContainerRT = coinContainer.GetComponent<RectTransform>();
+            UIFactory.Anchor(coinContainerRT, new Vector2(1, 1), new Vector2(220, 70), new Vector2(-15, -15));
+
+            if (art != null && art.coinRibbon != null)
+            {
+                var ribbonImg = coinContainer.AddComponent<Image>();
+                ribbonImg.sprite = art.coinRibbon;
+                ribbonImg.type = Image.Type.Sliced;
+                ribbonImg.preserveAspect = true;
+            }
+
+            var coinContent = new GameObject("CoinContent", typeof(RectTransform));
+            coinContent.transform.SetParent(coinContainer.transform, false);
+            var contentRT = coinContent.GetComponent<RectTransform>();
+            contentRT.anchorMin = Vector2.zero;
+            contentRT.anchorMax = Vector2.one;
+            contentRT.offsetMin = new Vector2(15, 5);
+            contentRT.offsetMax = new Vector2(-15, -5);
+
+            var hlg = coinContent.AddComponent<HorizontalLayoutGroup>();
+            hlg.spacing = 6;
+            hlg.childAlignment = TextAnchor.MiddleCenter;
+            hlg.childForceExpandWidth = false;
+            hlg.childForceExpandHeight = false;
+
+            if (art != null && art.coinIcon != null)
+            {
+                var icon = UIFactory.Icon(coinContent.transform, art.coinIcon, new Vector2(36, 36));
+                var le = icon.gameObject.AddComponent<LayoutElement>();
+                le.preferredWidth = 36;
+                le.preferredHeight = 36;
+            }
+
+            _coinText = UIFactory.Label(coinContent.transform, "", 30, TextAnchor.MiddleLeft, Color.white);
+            var coinLE = _coinText.gameObject.AddComponent<LayoutElement>();
+            coinLE.flexibleWidth = 1;
+            coinLE.preferredHeight = 40;
+
+            var csf = coinContent.AddComponent<ContentSizeFitter>();
+            csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            // ── VOLVER button (bottom left, ribbon style) ──
             if (art != null && art.ribbonButton != null)
             {
-                var closeBtn = UIFactory.ImageButton(Root.transform, art.ribbonButton, new Vector2(260, 100), Hide);
-                UIFactory.Anchor(closeBtn.GetComponent<RectTransform>(), new Vector2(1, 0), new Vector2(260, 100), new Vector2(-15, 15));
-                var closeTxt = UIFactory.Label(closeBtn.transform, "VOLVER", 30, TextAnchor.MiddleCenter, Color.white);
-                UIFactory.Stretch(closeTxt.rectTransform);
+                var volverBtn = UIFactory.ImageButton(Root.transform, art.ribbonButton, new Vector2(260, 100), Hide);
+                UIFactory.Anchor(volverBtn.GetComponent<RectTransform>(), new Vector2(0, 0), new Vector2(260, 100), new Vector2(15, 15));
+                var volverTxt = UIFactory.Label(volverBtn.transform, "VOLVER", 30, TextAnchor.MiddleCenter, Color.white);
+                UIFactory.Stretch(volverTxt.rectTransform);
             }
             else
             {
                 var close = UIFactory.Button(Root.transform, "VOLVER", new Color(0.4f, 0.4f, 0.45f), Hide);
-                UIFactory.Anchor(close.GetComponent<RectTransform>(), new Vector2(1, 0), new Vector2(180, 60), new Vector2(-15, 15));
+                UIFactory.Anchor(close.GetComponent<RectTransform>(), new Vector2(0, 0), new Vector2(180, 60), new Vector2(15, 15));
             }
 
-            // Viewport: drag to pan, scroll wheel to zoom
+            // ── Tree viewport (drag + zoom) ──
             var viewport = UIFactory.Panel(Root.transform, "Viewport", new Color(0, 0, 0, 0));
             var vpRT = viewport.GetComponent<RectTransform>();
             vpRT.anchorMin = Vector2.zero;
             vpRT.anchorMax = Vector2.one;
             vpRT.offsetMin = new Vector2(10, 60);
-            vpRT.offsetMax = new Vector2(-10, -100);
+            vpRT.offsetMax = new Vector2(-10, -110);
             viewport.AddComponent<RectMask2D>();
 
             var zoomPan = viewport.AddComponent<TreeZoomPan>();
@@ -91,13 +163,82 @@ namespace AutoBattle.App
 
             zoomPan.content = _treeContent;
 
+            // ── Detail panel (right side, paper background) ──
+            _detailPanel = new GameObject("DetailPanel", typeof(RectTransform));
+            _detailPanel.transform.SetParent(Root.transform, false);
+            var dpRT = _detailPanel.GetComponent<RectTransform>();
+            dpRT.anchorMin = new Vector2(1, 0);
+            dpRT.anchorMax = new Vector2(1, 1);
+            dpRT.pivot = new Vector2(1, 0.5f);
+            dpRT.sizeDelta = new Vector2(340, 0);
+            dpRT.offsetMin = new Vector2(-340, 80);
+            dpRT.offsetMax = new Vector2(-15, -120);
+
+            if (art != null && art.detailPaper != null)
+            {
+                var paperImg = _detailPanel.AddComponent<Image>();
+                paperImg.sprite = art.detailPaper;
+                paperImg.type = Image.Type.Simple;
+                paperImg.preserveAspect = false;
+            }
+            else
+            {
+                var paperImg = _detailPanel.AddComponent<Image>();
+                paperImg.color = new Color(0.9f, 0.85f, 0.7f, 0.95f);
+            }
+
+            // Paper content
+            var paperContent = new GameObject("PaperContent", typeof(RectTransform));
+            paperContent.transform.SetParent(_detailPanel.transform, false);
+            var pcRT = paperContent.GetComponent<RectTransform>();
+            pcRT.anchorMin = Vector2.zero;
+            pcRT.anchorMax = Vector2.one;
+            pcRT.offsetMin = new Vector2(30, 30);
+            pcRT.offsetMax = new Vector2(-30, -30);
+
+            var vlg = paperContent.AddComponent<VerticalLayoutGroup>();
+            vlg.spacing = 12;
+            vlg.padding = new RectOffset(10, 10, 20, 20);
+            vlg.childAlignment = TextAnchor.UpperCenter;
+            vlg.childControlWidth = vlg.childControlHeight = true;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
+
+            _detailTitle = UIFactory.Label(paperContent.transform, "", 28, TextAnchor.MiddleCenter, new Color(0.2f, 0.15f, 0.1f));
+            _detailTitle.fontStyle = FontStyle.Bold;
+            _detailTitle.gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
+
+            _detailDesc = UIFactory.Label(paperContent.transform, "", 20, TextAnchor.UpperCenter, new Color(0.3f, 0.25f, 0.15f));
+            _detailDesc.horizontalOverflow = HorizontalWrapMode.Wrap;
+            var descLE = _detailDesc.gameObject.AddComponent<LayoutElement>();
+            descLE.preferredHeight = 80;
+            descLE.flexibleHeight = 1;
+
+            _detailCost = UIFactory.Label(paperContent.transform, "", 24, TextAnchor.MiddleCenter, new Color(0.6f, 0.45f, 0.1f));
+            _detailCost.fontStyle = FontStyle.Bold;
+            _detailCost.gameObject.AddComponent<LayoutElement>().preferredHeight = 35;
+
+            _detailStatus = UIFactory.Label(paperContent.transform, "", 18, TextAnchor.MiddleCenter, new Color(0.5f, 0.2f, 0.1f));
+            _detailStatus.gameObject.AddComponent<LayoutElement>().preferredHeight = 30;
+
+            var buyBtnGO = UIFactory.Button(paperContent.transform, "COMPRAR", new Color(0.2f, 0.55f, 0.3f), OnBuy);
+            _buyBtn = buyBtnGO.GetComponent<Button>();
+            var buyLE = buyBtnGO.AddComponent<LayoutElement>();
+            buyLE.preferredHeight = 55;
+            buyLE.preferredWidth = 200;
+            _buyLabel = buyBtnGO.GetComponentInChildren<Text>();
+            _buyLabel.fontSize = 24;
+
+            _detailPanel.SetActive(false);
+
             Root.SetActive(false);
         }
 
         public void Show()
         {
             Root.SetActive(true);
-            _status.text = "";
+            _detailPanel.SetActive(false);
+            _selectedNode = null;
             Rebuild();
         }
 
@@ -110,14 +251,10 @@ namespace AutoBattle.App
             _nodeViews.Clear();
             _lines.Clear();
 
-            _info.text = $"⊙ {_ctx.State.wallet.coins}";
+            _coinText.text = $"{_ctx.State.wallet.coins}";
 
             var tree = _ctx.Config.upgradeTree;
-            if (tree == null || tree.nodes == null || tree.nodes.Length == 0)
-            {
-                _status.text = "No hay árbol configurado.";
-                return;
-            }
+            if (tree == null || tree.nodes == null || tree.nodes.Length == 0) return;
 
             var posMap = new Dictionary<string, Vector2>();
             foreach (var node in tree.nodes)
@@ -126,12 +263,10 @@ namespace AutoBattle.App
                 posMap[node.id] = node.treePosition;
             }
 
-            // Lines first (behind nodes)
             foreach (var node in tree.nodes)
             {
                 if (node == null || node.prerequisiteIds == null) continue;
-                if (!posMap.ContainsKey(node.id)) continue;
-                if (!IsVisible(node)) continue;
+                if (!posMap.ContainsKey(node.id) || !IsVisible(node)) continue;
 
                 foreach (var preId in node.prerequisiteIds)
                 {
@@ -144,7 +279,6 @@ namespace AutoBattle.App
                 }
             }
 
-            // Nodes
             foreach (var node in tree.nodes)
             {
                 if (node == null || !IsVisible(node)) continue;
@@ -153,6 +287,8 @@ namespace AutoBattle.App
                 var can = UpgradeService.CanPurchase(_ctx.State, node);
                 _nodeViews.Add(CreateNodeView(node, posMap[node.id], owned, can.success));
             }
+
+            RefreshDetail();
         }
 
         private bool IsVisible(UpgradeNode node)
@@ -171,7 +307,6 @@ namespace AutoBattle.App
         {
             float nodeSize = 88f;
 
-            // Single GO with the button sprite — no border
             var nodeGO = new GameObject($"Node_{node.id}", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             nodeGO.transform.SetParent(_treeContent, false);
             var rt = nodeGO.GetComponent<RectTransform>();
@@ -193,12 +328,10 @@ namespace AutoBattle.App
                     : new Color(0.18f, 0.18f, 0.22f));
             }
 
-            // Icon
             int idx = Mathf.Abs(node.id.GetHashCode()) % Icons.Length;
             var icon = UIFactory.Label(nodeGO.transform, Icons[idx], 34, TextAnchor.MiddleCenter, Color.white);
             UIFactory.Stretch(icon.rectTransform);
 
-            // Button
             var btn = nodeGO.AddComponent<Button>();
             btn.targetGraphic = img;
             var colors = btn.colors;
@@ -206,19 +339,79 @@ namespace AutoBattle.App
             colors.pressedColor = new Color(0.7f, 0.7f, 0.7f);
             btn.colors = colors;
             var cap = node;
-            btn.onClick.AddListener(() => OnNode(cap));
+            btn.onClick.AddListener(() => SelectNode(cap));
 
-            // Label below
-            string costText = node.cost > 0 ? $"\n{node.cost}g" : "\nGRATIS";
-            var label = UIFactory.Label(nodeGO.transform, $"{node.displayName}{costText}",
+            var label = UIFactory.Label(nodeGO.transform, node.displayName,
                 14, TextAnchor.UpperCenter, new Color(1, 1, 1, 0.9f));
             var lrt = label.rectTransform;
             lrt.anchorMin = lrt.anchorMax = lrt.pivot = new Vector2(0.5f, 1f);
-            lrt.sizeDelta = new Vector2(160, 40);
+            lrt.sizeDelta = new Vector2(160, 25);
             lrt.anchoredPosition = new Vector2(0, -nodeSize / 2f - 4f);
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
 
             return new NodeView { go = nodeGO, node = node };
+        }
+
+        private void SelectNode(UpgradeNode node)
+        {
+            _selectedNode = node;
+            _detailPanel.SetActive(true);
+            RefreshDetail();
+        }
+
+        private void RefreshDetail()
+        {
+            if (_selectedNode == null)
+            {
+                _detailPanel.SetActive(false);
+                return;
+            }
+
+            var node = _selectedNode;
+            bool owned = _ctx.State.upgrades.IsUnlocked(node.id);
+            var can = UpgradeService.CanPurchase(_ctx.State, node);
+
+            _detailTitle.text = node.displayName;
+            _detailDesc.text = node.description;
+            _detailCost.text = node.cost > 0 ? $"Coste: {node.cost} monedas" : "GRATIS";
+            _detailStatus.text = "";
+
+            if (owned)
+            {
+                _buyLabel.text = "COMPRADO";
+                _buyBtn.interactable = false;
+                _detailStatus.text = "Ya tienes esta mejora.";
+            }
+            else if (can.success)
+            {
+                _buyLabel.text = "COMPRAR";
+                _buyBtn.interactable = true;
+            }
+            else
+            {
+                _buyLabel.text = "COMPRAR";
+                _buyBtn.interactable = false;
+                _detailStatus.text = can.reason switch
+                {
+                    UpgradeFailReason.SinMonedas => "Monedas insuficientes.",
+                    UpgradeFailReason.NivelBaseInsuficiente => $"Requiere base nivel {node.requiredBaseLevel}.",
+                    UpgradeFailReason.PrerequisitoFaltante => "Desbloquea el nodo anterior.",
+                    _ => "No disponible.",
+                };
+            }
+        }
+
+        private void OnBuy()
+        {
+            if (_selectedNode == null) return;
+
+            var result = UpgradeService.Purchase(_ctx.State, _selectedNode);
+            if (result.success)
+            {
+                _ctx.Save();
+                _onChanged?.Invoke();
+            }
+            Rebuild();
         }
 
         private GameObject CreateLine(Vector2 from, Vector2 to, bool active)
@@ -243,35 +436,6 @@ namespace AutoBattle.App
                 : new Color(0.4f, 0.35f, 0.25f, 0.5f);
 
             return go;
-        }
-
-        private void OnNode(UpgradeNode node)
-        {
-            if (_ctx.State.upgrades.IsUnlocked(node.id))
-            {
-                _status.text = $"'{node.displayName}' ya comprado.";
-                return;
-            }
-
-            var result = UpgradeService.Purchase(_ctx.State, node);
-            if (result.success)
-            {
-                _ctx.Save();
-                _status.text = $"Comprado: {node.displayName}";
-                _onChanged?.Invoke();
-            }
-            else
-            {
-                _status.text = result.reason switch
-                {
-                    UpgradeFailReason.SinMonedas => "No tienes monedas suficientes.",
-                    UpgradeFailReason.NivelBaseInsuficiente => $"Requiere nivel de base {node.requiredBaseLevel}.",
-                    UpgradeFailReason.PrerequisitoFaltante => "Desbloquea el nodo anterior primero.",
-                    UpgradeFailReason.YaDesbloqueado => "Ya comprado.",
-                    _ => "No se puede comprar.",
-                };
-            }
-            Rebuild();
         }
 
         private struct NodeView { public GameObject go; public UpgradeNode node; }
