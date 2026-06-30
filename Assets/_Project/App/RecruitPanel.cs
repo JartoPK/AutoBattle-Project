@@ -85,6 +85,7 @@ namespace AutoBattle.App
 
             // Ruleta (se crea al final para quedar por encima de este panel).
             var rouletteGo = new GameObject("RarityRouletteRunner");
+            rouletteGo.transform.SetParent(canvas, false);
             _roulette = rouletteGo.AddComponent<RarityRoulette>();
             _roulette.Init(canvas);
 

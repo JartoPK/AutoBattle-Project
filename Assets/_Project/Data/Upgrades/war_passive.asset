@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: war_passive
   m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Upgrades.UpgradeNode
   id: war_passive
-  displayName: 'Pasiva: Muro'
-  description: "[Combate] A\xF1ade la pasiva 'Muro' al pool del Guerrero."
+  displayName: Escudo hierro
+  description: "Pasiva: reducci\xF3n da\xF1o."
   branch: 1
-  cost: 150
+  cost: 0
   requiredBaseLevel: 1
-  prerequisiteIds: []
+  prerequisiteIds:
+  - war_power
+  treePosition: {x: 50, y: -100}
   effect: 6
-  effectValue: 0
-  effectTargetId: muro
+  effectValue: 1
+  effectTargetId: war_passive

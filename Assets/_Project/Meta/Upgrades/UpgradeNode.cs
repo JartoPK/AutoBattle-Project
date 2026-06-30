@@ -20,6 +20,10 @@ namespace AutoBattle.Meta.Upgrades
         [Tooltip("Ids de nodos que deben estar desbloqueados antes.")]
         public string[] prerequisiteIds;
 
+        [Header("Posición en el árbol visual")]
+        [Tooltip("Posición X,Y del nodo en el panel del skill tree. Edítalo para mover el nodo.")]
+        public Vector2 treePosition;
+
         [Header("Efecto")]
         public UpgradeEffectType effect;
         public float effectValue;

@@ -13,13 +13,19 @@ MonoBehaviour:
   m_Name: UpgradeTree
   m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Upgrades.UpgradeTree
   nodes:
+  - {fileID: 11400000, guid: fcff97a5e8e9091488852b3cb37b01a6, type: 2}
   - {fileID: 11400000, guid: 3d0e86e37f8f9614283a1f0c4ad7927a, type: 2}
-  - {fileID: 11400000, guid: 535aeea9eea43bc478c8dbec8cbc0900, type: 2}
-  - {fileID: 11400000, guid: aeacc4c5bd82d2f43bd7b2b36a80608d, type: 2}
-  - {fileID: 11400000, guid: ff8449e84c72a5249adce45e0e1bf459, type: 2}
-  - {fileID: 11400000, guid: 3e27b0258a4e4804b858c26c00b6b103, type: 2}
   - {fileID: 11400000, guid: a584d6fdc4e615f49b516a680644d53d, type: 2}
+  - {fileID: 11400000, guid: 535aeea9eea43bc478c8dbec8cbc0900, type: 2}
+  - {fileID: 11400000, guid: 3e27b0258a4e4804b858c26c00b6b103, type: 2}
+  - {fileID: 11400000, guid: aeacc4c5bd82d2f43bd7b2b36a80608d, type: 2}
+  - {fileID: 11400000, guid: c1a4fcd1f890e1145a25035b9d50e11c, type: 2}
   - {fileID: 11400000, guid: 92068d93e59046748b8c571690038e75, type: 2}
+  - {fileID: 11400000, guid: ba6055f1e92882849b9bdfad7f8e7087, type: 2}
   - {fileID: 11400000, guid: a0e57f190f6c93b4091bfb32b6b5857e, type: 2}
+  - {fileID: 11400000, guid: 7c3e139983230c64d909621c35cb44b0, type: 2}
+  - {fileID: 11400000, guid: 4103f0ad19038184bba1939171e223c8, type: 2}
   - {fileID: 11400000, guid: a260f7b6e313f10469ae9f9f88d54f68, type: 2}
+  - {fileID: 11400000, guid: 0676108b2a7ddd54692c3ab16795a290, type: 2}
   - {fileID: 11400000, guid: 195e4810b9d5f5944aae691e8214056b, type: 2}
+  - {fileID: 11400000, guid: 991d597d2cfdb0942b2578e2b4ff9943, type: 2}

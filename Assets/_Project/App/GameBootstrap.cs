@@ -50,13 +50,34 @@ namespace AutoBattle.App
             EnsureLight();
             EnsureEventSystem();
 
-            var canvas = CreateCanvas();
-            _hud = new Hud(canvas, _ctx, ShowBase, ShowMap);
-            _recruit = new RecruitPanel(canvas, _ctx, OnChanged);
-            _tree = new UpgradeTreePanel(canvas, _ctx, OnChanged);
-            _nodeInfo = new NodeInfoPanel(canvas);
-
             var art = Resources.Load<ArtConfig>("ArtConfig");
+
+            if (art != null && art.cursor != null)
+            {
+                var src = art.cursor;
+                int scale = 2;
+                var big = new Texture2D(src.width * scale, src.height * scale, TextureFormat.RGBA32, false);
+                big.filterMode = FilterMode.Point;
+                var pixels = src.GetPixels();
+                var dst = new Color[big.width * big.height];
+                for (int y = 0; y < src.height; y++)
+                for (int x = 0; x < src.width; x++)
+                {
+                    var c = pixels[y * src.width + x];
+                    for (int dy = 0; dy < scale; dy++)
+                    for (int dx = 0; dx < scale; dx++)
+                        dst[(y * scale + dy) * big.width + x * scale + dx] = c;
+                }
+                big.SetPixels(dst);
+                big.Apply();
+                Cursor.SetCursor(big, Vector2.zero, CursorMode.Auto);
+            }
+
+            var canvas = CreateCanvas();
+            _hud = new Hud(canvas, _ctx, art, ShowBase, ShowMap);
+            _recruit = new RecruitPanel(canvas, _ctx, OnChanged);
+            _tree = new UpgradeTreePanel(canvas, _ctx, art, OnChanged);
+            _nodeInfo = new NodeInfoPanel(canvas);
 
             HideAllSceneObjects();
 

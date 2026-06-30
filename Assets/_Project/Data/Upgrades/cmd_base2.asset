@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: cmd_base2
   m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Upgrades.UpgradeNode
   id: cmd_base2
-  displayName: Ampliar la base
-  description: "Sube el nivel de la base (m\xE1s tope, mejor herencia, desbloquea
-    nodos)."
+  displayName: Ampliar base
+  description: Sube nivel de base.
   branch: 0
-  cost: 250
+  cost: 0
   requiredBaseLevel: 1
-  prerequisiteIds: []
+  prerequisiteIds:
+  - cmd_roster
+  - cmd_recruits
+  treePosition: {x: -200, y: -100}
   effect: 1
   effectValue: 1
   effectTargetId: 

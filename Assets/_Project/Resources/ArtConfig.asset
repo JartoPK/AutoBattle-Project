@@ -77,3 +77,9 @@ MonoBehaviour:
   castle: {fileID: 21300000, guid: 5fef2d88b09824faba4be40a870c347e, type: 3}
   monastery: {fileID: 21300000, guid: a45aff6aa2c5d4d5f879c10f0231ba12, type: 3}
   house: {fileID: 21300000, guid: f64d3993d34d4410e83e766d40059c1b, type: 3}
+  cursor: {fileID: 2800000, guid: d5341ee0556844303a17dd8cb83e9727, type: 3}
+  coinIcon: {fileID: 21300000, guid: 7a0f4fab77b344f7b9386a7c87e492b1, type: 3}
+  coinRibbon: {fileID: 21300000, guid: c2f56413a5e64412da2afa598cc72ae0, type: 3}
+  ribbonButton: {fileID: 21300000, guid: b4344f1ed611245fc9b1e0d04fa14e56, type: 3}
+  woodTable: {fileID: 21300000, guid: 9483951be6fb8453f9d2f75614e33c86, type: 3}
+  skillNodeButton: {fileID: 21300000, guid: 0de4de84fd02a4139b7f5756f7bcfc24, type: 3}

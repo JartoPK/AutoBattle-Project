@@ -3,6 +3,7 @@
     "rootNamespace": "AutoBattle.App.Editor",
     "references": [
         "AutoBattle.App",
+        "AutoBattle.Meta",
         "Unity.2D.Tilemap.Extras"
     ],
     "includePlatforms": [

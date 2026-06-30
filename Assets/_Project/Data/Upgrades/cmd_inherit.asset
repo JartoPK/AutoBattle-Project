@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: cmd_inherit
   m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Upgrades.UpgradeNode
   id: cmd_inherit
-  displayName: Legado mejorado
-  description: +15% a las stats heredadas en la herencia.
+  displayName: Herencia+
+  description: Tropas heredan mejores stats.
   branch: 0
-  cost: 200
-  requiredBaseLevel: 1
-  prerequisiteIds: []
+  cost: 0
+  requiredBaseLevel: 2
+  prerequisiteIds:
+  - cmd_base2
+  treePosition: {x: -300, y: -300}
   effect: 4
   effectValue: 0.15
   effectTargetId: 

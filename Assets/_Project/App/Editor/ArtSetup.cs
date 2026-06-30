@@ -27,6 +27,15 @@ namespace AutoBattle.App.Editor
             cfg.monastery = Spr($"{TS}/Buildings/Blue Buildings/Monastery.png");
             cfg.house     = Spr($"{TS}/Buildings/Blue Buildings/House1.png");
 
+            var cursorPath = $"{TS}/UI Elements/Cursors/Cursor_02.png";
+            EnsureCursorImport(cursorPath);
+            cfg.cursor = AssetDatabase.LoadAssetAtPath<Texture2D>(cursorPath);
+            cfg.coinIcon = Spr($"{TS}/UI Elements/Icons/Icon_03.png");
+            cfg.coinRibbon = Spr($"{TS}/UI Elements/Ribbons/SmallRibbons 2.png");
+            cfg.ribbonButton = Spr($"{TS}/UI Elements/Ribbons/SmallRibbons 4.png");
+            cfg.woodTable = Spr($"{TS}/UI Elements/Wood Table/WoodTable_Slots.png");
+            cfg.skillNodeButton = Spr($"{TS}/UI Elements/Buttons/TinySquareBlueButton.png");
+
             EditorUtility.SetDirty(cfg);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -66,6 +75,16 @@ namespace AutoBattle.App.Editor
             foreach (var o in AssetDatabase.LoadAllAssetRepresentationsAtPath(path))
                 if (o is Sprite sp) return sp;
             return null;
+        }
+
+        private static void EnsureCursorImport(string path)
+        {
+            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null) return;
+            if (importer.isReadable && importer.textureType == TextureImporterType.Cursor) return;
+            importer.textureType = TextureImporterType.Cursor;
+            importer.isReadable = true;
+            importer.SaveAndReimport();
         }
 
         private static T CreateOrLoad<T>(string path) where T : ScriptableObject

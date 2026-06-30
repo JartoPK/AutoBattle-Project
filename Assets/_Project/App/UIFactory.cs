@@ -4,13 +4,19 @@ using UnityEngine.UI;
 
 namespace AutoBattle.App
 {
-    /// <summary>Helpers para construir UI uGUI por código (UI de prueba).</summary>
     public static class UIFactory
     {
         private static Font _font;
-        public static Font DefaultFont => _font != null
-            ? _font
-            : _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        public static Font DefaultFont
+        {
+            get
+            {
+                if (_font != null) return _font;
+                _font = Resources.Load<Font>("ComicNeueSansID");
+                if (_font == null) _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                return _font;
+            }
+        }
 
         public static GameObject Panel(Transform parent, string name, Color color)
         {
@@ -20,7 +26,6 @@ namespace AutoBattle.App
             return go;
         }
 
-        /// <summary>Estira un RectTransform a su padre con márgenes (left, right, top, bottom).</summary>
         public static RectTransform Stretch(RectTransform rt, float l = 0, float r = 0, float t = 0, float b = 0)
         {
             rt.anchorMin = Vector2.zero;
@@ -30,7 +35,6 @@ namespace AutoBattle.App
             return rt;
         }
 
-        /// <summary>Ancla un RectTransform a una esquina con tamaño y offset fijos.</summary>
         public static RectTransform Anchor(RectTransform rt, Vector2 corner, Vector2 size, Vector2 offset)
         {
             rt.anchorMin = corner;
@@ -68,6 +72,33 @@ namespace AutoBattle.App
             var text = Label(go.transform, label, 28, TextAnchor.MiddleCenter, Color.white);
             Stretch(text.rectTransform);
             return btn;
+        }
+
+        public static Button ImageButton(Transform parent, Sprite sprite, Vector2 size, Action onClick)
+        {
+            var go = new GameObject("ImageButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            go.transform.SetParent(parent, false);
+            var img = go.GetComponent<Image>();
+            img.sprite = sprite;
+            img.preserveAspect = true;
+            img.type = Image.Type.Simple;
+            go.GetComponent<RectTransform>().sizeDelta = size;
+
+            var btn = go.GetComponent<Button>();
+            btn.transition = Selectable.Transition.ColorTint;
+            if (onClick != null) btn.onClick.AddListener(() => onClick());
+            return btn;
+        }
+
+        public static Image Icon(Transform parent, Sprite sprite, Vector2 size)
+        {
+            var go = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            go.transform.SetParent(parent, false);
+            var img = go.GetComponent<Image>();
+            img.sprite = sprite;
+            img.preserveAspect = true;
+            go.GetComponent<RectTransform>().sizeDelta = size;
+            return img;
         }
     }
 }

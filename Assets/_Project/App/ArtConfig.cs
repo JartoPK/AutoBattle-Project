@@ -33,6 +33,14 @@ namespace AutoBattle.App
         public Sprite monastery;
         public Sprite house;
 
+        [Header("UI")]
+        public Texture2D cursor;
+        public Sprite coinIcon;
+        public Sprite coinRibbon;
+        public Sprite ribbonButton;
+        public Sprite woodTable;
+        public Sprite skillNodeButton;
+
         public UnitAnim AnimFor(UnitClass cls) => cls switch
         {
             UnitClass.Guerrero => warrior,

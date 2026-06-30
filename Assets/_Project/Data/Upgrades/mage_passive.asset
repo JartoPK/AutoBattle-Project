@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: mage_passive
   m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Upgrades.UpgradeNode
   id: mage_passive
-  displayName: 'Pasiva: Canalizar'
-  description: "[Combate] A\xF1ade la pasiva 'Canalizar' al pool del Mago."
+  displayName: "Aura m\xEDstica"
+  description: "Pasiva: regen man\xE1."
   branch: 3
-  cost: 150
+  cost: 0
   requiredBaseLevel: 1
-  prerequisiteIds: []
+  prerequisiteIds:
+  - mage_power
+  treePosition: {x: 550, y: -100}
   effect: 6
-  effectValue: 0
-  effectTargetId: canalizar
+  effectValue: 1
+  effectTargetId: mage_passive

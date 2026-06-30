@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7d53e554fa728043b9a43d9882c5da0, type: 3}
-  m_Name: cmd_roster
+  m_Name: mage_power
   m_EditorClassIdentifier: AutoBattle.Meta::AutoBattle.Meta.Upgrades.UpgradeNode
-  id: cmd_roster
-  displayName: Barracones
-  description: +2 roster.
-  branch: 0
+  id: mage_power
+  displayName: "Canalizaci\xF3n"
+  description: "+15% da\xF1o m\xE1gico."
+  branch: 3
   cost: 0
   requiredBaseLevel: 1
   prerequisiteIds:
   - cmd_start
-  treePosition: {x: -300, y: 100}
-  effect: 2
-  effectValue: 2
+  treePosition: {x: 550, y: 100}
+  effect: 9
+  effectValue: 15
   effectTargetId: 
